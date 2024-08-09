@@ -1,0 +1,6 @@
+logging:
+  config: classpath:logback-test.xml
+
+spring:
+  neo4j:
+    image: neo4j:5.22.0-community

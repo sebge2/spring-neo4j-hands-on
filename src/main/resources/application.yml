@@ -1,0 +1,15 @@
+spring:
+  main:
+    banner-mode: "OFF"
+  application:
+    name: spring-neo4j-hands-on
+  neo4j:
+    uri: neo4j://localhost:7687
+    authentication:
+      username: neo4j
+      password: ${NEO4J_PWD}
+
+server:
+  port: 8083
+  servlet:
+    context-path: /api
