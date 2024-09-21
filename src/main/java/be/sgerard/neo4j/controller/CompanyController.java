@@ -68,7 +68,7 @@ public class CompanyController {
     @PostMapping("/{id}/root-team")
     TeamSummaryDto create(@PathVariable(name = "id") String companyId,
                           @RequestBody RootTeamCreationRequestDto dto) {
-        return teamMapper.mapToDto(
+        return teamMapper.mapToSummaryDto(
                 manager.createRootTeam(
                         companyId,
                         team -> teamMapper.fillFromDto(dto, team)

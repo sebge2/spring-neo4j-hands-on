@@ -1,26 +1,22 @@
-package be.sgerard.neo4j.model.dto.team;
+package be.sgerard.neo4j.model.dto.project;
 
-import be.sgerard.neo4j.model.dto.project.ProjectDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
 
-import java.util.Set;
-
-@Schema(name = "Team")
+@Schema(name = "Project Summary")
 @Builder(toBuilder = true)
 @Jacksonized
 @Getter
 @Setter
-public class TeamDto {
+public class ProjectSummaryDto {
 
     private final String id;
     private final String name;
+    private final String strategy;
+    private final String objectives;
+    private final String difficulties;
     private final String notes;
-    private final Set<TeamDto> subTeams;
-    private final Set<TeamMemberDto> members;
-    private final Set<ProjectDto> projects;
-
 }

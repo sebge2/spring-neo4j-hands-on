@@ -22,31 +22,31 @@ public class ProjectController {
     private final ServiceLinkMapper serviceLinkMapper;
 
     @GetMapping
-    List<ProjectDto> findAll() {
+    List<ProjectSummaryDto> findAll() {
         return manager.findAll().stream()
-                .map(projectMapper::mapToDto)
+                .map(projectMapper::mapToSummaryDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
-    ProjectDto findById(@PathVariable String id) {
-        return projectMapper.mapToDto(
+    ProjectSummaryDto findById(@PathVariable String id) {
+        return projectMapper.mapToSummaryDto(
                 manager.findByIdOrDie(id)
         );
     }
 
     @PutMapping(value = "/{id}")
-    ProjectDto update(@PathVariable String id,
-                      @RequestBody ProjectUpdateRequestDto dto) {
-        return projectMapper.mapToDto(
+    ProjectSummaryDto update(@PathVariable String id,
+                             @RequestBody ProjectUpdateRequestDto dto) {
+        return projectMapper.mapToSummaryDto(
                 manager.update(id, project -> projectMapper.fillFromDto(dto, project))
         );
     }
 
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<ProjectDto> delete(@PathVariable String id) {
+    ResponseEntity<ProjectSummaryDto> delete(@PathVariable String id) {
         return manager.deleteById(id)
-                .map(projectMapper::mapToDto)
+                .map(projectMapper::mapToSummaryDto)
                 .map(ResponseEntity::ofNullable)
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }

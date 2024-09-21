@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.jackson.Jacksonized;
 
+import java.util.Set;
+
 @Schema(name = "Project")
 @Builder(toBuilder = true)
 @Jacksonized
@@ -15,6 +17,7 @@ public class ProjectDto {
 
     private final String id;
     private final String name;
+    private final Set<ServiceLinkDto> services;
     private final String strategy;
     private final String objectives;
     private final String difficulties;

@@ -8,7 +8,7 @@ import be.sgerard.neo4j.model.dto.company.CompanyUpdateRequestDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {TeamMapper.class})
 public interface CompanyMapper {
 
     CompanySummaryDto mapToSummaryDto(CompanyEntity company);

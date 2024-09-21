@@ -5,7 +5,7 @@ import be.sgerard.neo4j.mapper.ProjectMapper;
 import be.sgerard.neo4j.mapper.TeamMapper;
 import be.sgerard.neo4j.mapper.TeamMemberMapper;
 import be.sgerard.neo4j.model.dto.project.ProjectCreationRequestDto;
-import be.sgerard.neo4j.model.dto.project.ProjectDto;
+import be.sgerard.neo4j.model.dto.project.ProjectSummaryDto;
 import be.sgerard.neo4j.model.dto.team.*;
 import be.sgerard.neo4j.service.team.TeamManager;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,13 +31,13 @@ public class TeamController {
     @GetMapping
     List<TeamSummaryDto> findAll() {
         return teamManager.findAll().stream()
-                .map(teamMapper::mapToDto)
+                .map(teamMapper::mapToSummaryDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
     TeamSummaryDto findById(@PathVariable String id) {
-        return teamMapper.mapToDto(
+        return teamMapper.mapToSummaryDto(
                 teamManager.findByIdOrDie(id)
         );
     }
@@ -45,7 +45,7 @@ public class TeamController {
     @PostMapping("/{id}/sub-teams")
     TeamSummaryDto createSubTeam(@RequestBody SubTeamCreationRequestDto dto,
                                  @PathVariable(name = "id") String parentTeamId) {
-        return teamMapper.mapToDto(
+        return teamMapper.mapToSummaryDto(
                 teamManager.createSub(
                         parentTeamId,
                         team -> teamMapper.fillFromDto(dto, team)
@@ -56,7 +56,7 @@ public class TeamController {
     @PutMapping(value = "/{id}")
     TeamSummaryDto update(@PathVariable String id,
                           @RequestBody TeamUpdateRequestDto dto) {
-        return teamMapper.mapToDto(
+        return teamMapper.mapToSummaryDto(
                 teamManager.update(id, team -> teamMapper.fillFromDto(dto, team))
         );
     }
@@ -64,7 +64,7 @@ public class TeamController {
     @DeleteMapping(value = "/{id}")
     ResponseEntity<TeamSummaryDto> delete(@PathVariable String id) {
         return teamManager.deleteById(id)
-                .map(teamMapper::mapToDto)
+                .map(teamMapper::mapToSummaryDto)
                 .map(ResponseEntity::ofNullable)
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
@@ -108,9 +108,9 @@ public class TeamController {
     }
 
     @PostMapping("/{id}/projects")
-    ProjectDto createProject(@PathVariable(name = "id") String teamId,
-                             @RequestBody ProjectCreationRequestDto dto) {
-        return projectMapper.mapToDto(
+    ProjectSummaryDto createProject(@PathVariable(name = "id") String teamId,
+                                    @RequestBody ProjectCreationRequestDto dto) {
+        return projectMapper.mapToSummaryDto(
                 teamManager.addProject(
                         teamId,
                         project -> projectMapper.fillFromDto(dto, project)

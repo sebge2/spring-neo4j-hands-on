@@ -1,7 +1,7 @@
 package be.sgerard.neo4j.model.dto.business;
 
 import be.sgerard.neo4j.model.dto.company.CompanySummaryDto;
-import be.sgerard.neo4j.model.dto.project.ProjectDto;
+import be.sgerard.neo4j.model.dto.project.ProjectSummaryDto;
 import be.sgerard.neo4j.model.dto.project.ServiceLinkDto;
 import be.sgerard.neo4j.model.dto.service.ServiceDto;
 import be.sgerard.neo4j.model.dto.team.TeamSummaryDto;
@@ -20,7 +20,7 @@ public class ServiceUsageDescriptionDto {
 
     private final ServiceDto service;
     private final ServiceLinkDto serviceLink; // TODO load service in service link
-    private final ProjectDto project;
+    private final ProjectSummaryDto project;
     private final TeamSummaryDto team; // TODO team is null
     private final CompanySummaryDto company;
 }
