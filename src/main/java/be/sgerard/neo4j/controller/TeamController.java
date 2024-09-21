@@ -29,22 +29,22 @@ public class TeamController {
     private final ProjectMapper projectMapper;
 
     @GetMapping
-    List<TeamDto> findAll() {
+    List<TeamSummaryDto> findAll() {
         return teamManager.findAll().stream()
                 .map(teamMapper::mapToDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
-    TeamDto findById(@PathVariable String id) {
+    TeamSummaryDto findById(@PathVariable String id) {
         return teamMapper.mapToDto(
                 teamManager.findByIdOrDie(id)
         );
     }
 
     @PostMapping("/{id}/sub-teams")
-    TeamDto createSubTeam(@RequestBody SubTeamCreationRequestDto dto,
-                          @PathVariable(name = "id") String parentTeamId) {
+    TeamSummaryDto createSubTeam(@RequestBody SubTeamCreationRequestDto dto,
+                                 @PathVariable(name = "id") String parentTeamId) {
         return teamMapper.mapToDto(
                 teamManager.createSub(
                         parentTeamId,
@@ -54,15 +54,15 @@ public class TeamController {
     }
 
     @PutMapping(value = "/{id}")
-    TeamDto update(@PathVariable String id,
-                   @RequestBody TeamUpdateRequestDto dto) {
+    TeamSummaryDto update(@PathVariable String id,
+                          @RequestBody TeamUpdateRequestDto dto) {
         return teamMapper.mapToDto(
                 teamManager.update(id, team -> teamMapper.fillFromDto(dto, team))
         );
     }
 
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<TeamDto> delete(@PathVariable String id) {
+    ResponseEntity<TeamSummaryDto> delete(@PathVariable String id) {
         return teamManager.deleteById(id)
                 .map(teamMapper::mapToDto)
                 .map(ResponseEntity::ofNullable)

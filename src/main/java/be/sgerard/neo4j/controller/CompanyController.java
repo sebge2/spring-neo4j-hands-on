@@ -4,9 +4,10 @@ import be.sgerard.neo4j.mapper.CompanyMapper;
 import be.sgerard.neo4j.mapper.TeamMapper;
 import be.sgerard.neo4j.model.dto.company.CompanyCreationRequestDto;
 import be.sgerard.neo4j.model.dto.company.CompanyDto;
+import be.sgerard.neo4j.model.dto.company.CompanySummaryDto;
 import be.sgerard.neo4j.model.dto.company.CompanyUpdateRequestDto;
 import be.sgerard.neo4j.model.dto.team.RootTeamCreationRequestDto;
-import be.sgerard.neo4j.model.dto.team.TeamDto;
+import be.sgerard.neo4j.model.dto.team.TeamSummaryDto;
 import be.sgerard.neo4j.service.company.CompanyManager;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -26,22 +27,22 @@ public class CompanyController {
     private final TeamMapper teamMapper;
 
     @GetMapping
-    List<CompanyDto> findAll() {
+    List<CompanySummaryDto> findAll() {
         return manager.findAll().stream()
-                .map(companyMapper::mapToDto)
+                .map(companyMapper::mapToSummaryDto)
                 .toList();
     }
 
     @GetMapping("/{id}")
-    CompanyDto findById(@PathVariable String id) {
-        return companyMapper.mapToDto(
+    CompanySummaryDto findById(@PathVariable String id) {
+        return companyMapper.mapToSummaryDto(
                 manager.findByIdOrDie(id)
         );
     }
 
     @PostMapping
-    CompanyDto create(@RequestBody CompanyCreationRequestDto dto) {
-        return companyMapper.mapToDto(
+    CompanySummaryDto create(@RequestBody CompanyCreationRequestDto dto) {
+        return companyMapper.mapToSummaryDto(
                 manager.create(
                         company -> companyMapper.fillFromDto(dto, company)
                 )
@@ -49,29 +50,36 @@ public class CompanyController {
     }
 
     @PutMapping(value = "/{id}")
-    CompanyDto update(@PathVariable String id,
-                      @RequestBody CompanyUpdateRequestDto dto) {
-        return companyMapper.mapToDto(
+    CompanySummaryDto update(@PathVariable String id,
+                             @RequestBody CompanyUpdateRequestDto dto) {
+        return companyMapper.mapToSummaryDto(
                 manager.update(id, company -> companyMapper.fillFromDto(dto, company))
         );
     }
 
     @DeleteMapping(value = "/{id}")
-    ResponseEntity<CompanyDto> delete(@PathVariable String id) {
+    ResponseEntity<CompanySummaryDto> delete(@PathVariable String id) {
         return manager.deleteById(id)
-                .map(companyMapper::mapToDto)
+                .map(companyMapper::mapToSummaryDto)
                 .map(ResponseEntity::ofNullable)
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
     @PostMapping("/{id}/root-team")
-    TeamDto create(@PathVariable(name = "id") String companyId,
-                   @RequestBody RootTeamCreationRequestDto dto) {
+    TeamSummaryDto create(@PathVariable(name = "id") String companyId,
+                          @RequestBody RootTeamCreationRequestDto dto) {
         return teamMapper.mapToDto(
                 manager.createRootTeam(
                         companyId,
                         team -> teamMapper.fillFromDto(dto, team)
                 )
+        );
+    }
+
+    @PostMapping("/{id}/do-load-all-graph")
+    CompanyDto loadAllGraph(@PathVariable String id) {
+        return companyMapper.mapToDto(
+                manager.findByIdOrDie(id)
         );
     }
 }
