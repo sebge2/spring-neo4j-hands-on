@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -153,6 +154,44 @@ class CompanyControllerTest extends AbstractControllerTest {
         void notFound() throws Exception {
             mockMvc.perform(delete("/v1/companies/{id}", 666))
                     .andExpect(status().isNoContent());
+        }
+    }
+
+    @Nested
+    @DisplayName("Load All Graph")
+    class LoadAllGraph {
+
+        @Test
+        @DisplayName("Found")
+        void found() throws Exception {
+            final String companyId = id.getCompanyId("ACME");
+
+            mockMvc.perform(post("/v1/companies/{id}/do-load-all-graph", companyId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.id").isNotEmpty())
+                    .andExpect(jsonPath("$.name", equalTo("ACME")))
+                    .andExpect(jsonPath("$.rootTeam.name", equalTo("IT Department")))
+                    .andExpect(jsonPath("$.rootTeam.members[0].person.firstName", equalTo("Bugs")))
+                    .andExpect(jsonPath("$.rootTeam.members[0].roles[0]", equalTo("LEADER")))
+                    .andExpect(jsonPath("$.rootTeam.projects[0].name", equalTo("Looney Mobile App")))
+                    .andExpect(jsonPath("$.rootTeam.projects[0].services", hasSize(2)))
+                    .andExpect(jsonPath("$.rootTeam.projects[0].services[*].service.name", equalTo(asList("Java", "Angular"))))
+                    .andExpect(jsonPath("$.rootTeam.subTeams", hasSize(1)))
+                    .andExpect(jsonPath("$.rootTeam.subTeams[0].name", equalTo("Looney Team")))
+                    .andExpect(jsonPath("$.rootTeam.subTeams[0].members", hasSize(1)))
+                    .andExpect(jsonPath("$.rootTeam.subTeams[0].members[0].person.firstName", equalTo("Daffy")))
+                    .andExpect(jsonPath("$.rootTeam.subTeams[0].members[0].roles[0]", equalTo("DEVELOPER")))
+                    .andExpect(jsonPath("$.rootTeam.subTeams[0].projects", hasSize(1)))
+                    .andExpect(jsonPath("$.rootTeam.subTeams[0].projects[0].name", equalTo("Hoo-hoo! App")))
+                    .andExpect(jsonPath("$.rootTeam.subTeams[0].projects[0].services", hasSize(1)))
+                    .andExpect(jsonPath("$.rootTeam.subTeams[0].projects[0].services[0].service.name", equalTo("Java")));
+        }
+
+        @Test
+        @DisplayName("Not Found")
+        void notFound() throws Exception {
+            mockMvc.perform(post("/v1/companies/{id}/do-load-all-graph", 666))
+                    .andExpect(status().isNotFound());
         }
     }
 
