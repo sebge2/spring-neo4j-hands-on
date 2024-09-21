@@ -8,7 +8,7 @@ import be.sgerard.neo4j.model.project.ProjectEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ServiceLinkMapper.class})
 public interface ProjectMapper {
 
     ProjectSummaryDto mapToSummaryDto(ProjectEntity project);
