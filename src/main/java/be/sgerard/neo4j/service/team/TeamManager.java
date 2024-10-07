@@ -6,6 +6,7 @@ import be.sgerard.neo4j.model.project.ProjectEntity;
 import be.sgerard.neo4j.model.team.TeamEntity;
 import be.sgerard.neo4j.model.team.TeamMemberEntity;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -36,6 +37,8 @@ public interface TeamManager {
     TeamMemberEntity updateMember(String teamId, String personId, Consumer<TeamMemberEntity> updater);
 
     Optional<TeamMemberEntity> deleteMember(String teamId, String personId);
+
+    Collection<ProjectEntity> findAllProjects(String teamId);
 
     ProjectEntity addProject(String teamId, Consumer<ProjectEntity> initializer);
 }

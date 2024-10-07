@@ -107,6 +107,13 @@ public class TeamController {
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
 
+    @GetMapping("/{id}/projects")
+    List<ProjectSummaryDto> findAllProjects(@PathVariable(name = "id") String teamId) {
+        return teamManager.findAllProjects(teamId).stream()
+                .map(projectMapper::mapToSummaryDto)
+                .toList();
+    }
+
     @PostMapping("/{id}/projects")
     ProjectSummaryDto createProject(@PathVariable(name = "id") String teamId,
                                     @RequestBody ProjectCreationRequestDto dto) {
@@ -119,5 +126,4 @@ public class TeamController {
     }
 
     // TODO list sub-teams
-    // TODO list projects
 }

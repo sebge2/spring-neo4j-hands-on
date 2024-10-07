@@ -10,10 +10,7 @@ import be.sgerard.neo4j.service.project.ProjectManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 @Service
@@ -82,7 +79,7 @@ public class TeamManagerImpl implements TeamManager {
     @Override
     public List<TeamMemberEntity> findAllMembers(String teamId) {
         return findByIdOrDie(teamId).getMembers().stream()
-                .sorted(Comparator.comparing(l-> l.getPerson().getName()))
+                .sorted(Comparator.comparing(l -> l.getPerson().getName()))
                 .toList();
     }
 
@@ -132,6 +129,13 @@ public class TeamManagerImpl implements TeamManager {
 
                     return link;
                 });
+    }
+
+    @Override
+    public Collection<ProjectEntity> findAllProjects(String teamId) {
+        return findByIdOrDie(teamId).getProjects().stream()
+                .sorted(Comparator.comparing(ProjectEntity::getName))
+                .toList();
     }
 
     @Override

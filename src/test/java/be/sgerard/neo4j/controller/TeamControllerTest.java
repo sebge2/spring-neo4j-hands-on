@@ -405,6 +405,38 @@ class TeamControllerTest extends AbstractControllerTest {
     }
 
     @Nested
+    @DisplayName("Find All Projects")
+    class FindAllProjects {
+
+        @Test
+        @DisplayName("Nothing")
+        void nothing() throws Exception {
+            project.projects().deleteAll();
+
+            final String teamId = id.getTeamId("IT Department");
+
+            mockMvc.perform(get("/v1/teams/{id}/projects", teamId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$", hasSize(0)));
+        }
+
+        @Test
+        @DisplayName("Found")
+        void found() throws Exception {
+            final String teamId = id.getTeamId("IT Department");
+
+            mockMvc.perform(get("/v1/teams/{id}/projects", teamId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$", hasSize(1)))
+                    .andExpect(jsonPath("$[0].name", equalTo("Looney Mobile App")))
+                    .andExpect(jsonPath("$[0].strategy", equalTo("Make it more present in the life of players.")))
+                    .andExpect(jsonPath("$[0].objectives", equalTo("Implement objects and people discovery with the camera.")))
+                    .andExpect(jsonPath("$[0].difficulties", equalTo("Multi-platforms is a nightmare.")))
+                    .andExpect(jsonPath("$[0].notes", equalTo("Main project of the company. A lot of investment on it.")));
+        }
+    }
+
+    @Nested
     @DisplayName("Create Project")
     class CreateProject {
 
