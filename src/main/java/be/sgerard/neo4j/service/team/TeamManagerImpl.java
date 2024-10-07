@@ -32,6 +32,13 @@ public class TeamManagerImpl implements TeamManager {
     }
 
     @Override
+    public List<TeamEntity> findAllSubTeams(String parentTeamId) {
+        return findByIdOrDie(parentTeamId).getSubTeams().stream()
+                .sorted(Comparator.comparing(TeamEntity::getName))
+                .toList();
+    }
+
+    @Override
     public TeamEntity createRoot(Consumer<TeamEntity> initializer) {
         final TeamEntity team = new TeamEntity();
         initializer.accept(team);

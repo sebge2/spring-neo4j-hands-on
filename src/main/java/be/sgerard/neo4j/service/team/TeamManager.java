@@ -22,6 +22,8 @@ public interface TeamManager {
                 .orElseThrow(() -> new ResourceNotFoundException("There is no team with id [%s].".formatted(id)));
     }
 
+    List<TeamEntity> findAllSubTeams(String parentTeamId);
+
     TeamEntity createRoot(Consumer<TeamEntity> initializer);
 
     TeamEntity createSub(String parentTeamId, Consumer<TeamEntity> initializer);
@@ -41,4 +43,5 @@ public interface TeamManager {
     Collection<ProjectEntity> findAllProjects(String teamId);
 
     ProjectEntity addProject(String teamId, Consumer<ProjectEntity> initializer);
+
 }

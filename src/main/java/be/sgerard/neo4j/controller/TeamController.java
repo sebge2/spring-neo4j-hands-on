@@ -42,6 +42,13 @@ public class TeamController {
         );
     }
 
+    @GetMapping("/{id}/sub-teams")
+    List<TeamSummaryDto> findAllSubTeams(@PathVariable(name = "id") String parentTeamId) {
+        return teamManager.findAllSubTeams(parentTeamId).stream()
+                .map(teamMapper::mapToSummaryDto)
+                .toList();
+    }
+
     @PostMapping("/{id}/sub-teams")
     TeamSummaryDto createSubTeam(@RequestBody SubTeamCreationRequestDto dto,
                                  @PathVariable(name = "id") String parentTeamId) {
@@ -124,6 +131,4 @@ public class TeamController {
                 )
         );
     }
-
-    // TODO list sub-teams
 }

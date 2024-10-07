@@ -74,6 +74,36 @@ class TeamControllerTest extends AbstractControllerTest {
     }
 
     @Nested
+    @DisplayName("Find All Sub Teams")
+    class FindAllSubTeams {
+
+        @Test
+        @DisplayName("Nothing")
+        void nothing() throws Exception {
+            person.persons().deleteAll();
+
+            final String teamId = id.getTeamId("Looney Team");
+
+            mockMvc.perform(get("/v1/teams/{id}/sub-teams", teamId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$", hasSize(0)));
+        }
+
+        @Test
+        @DisplayName("Found")
+        void found() throws Exception {
+            final String teamId = id.getTeamId("IT Department");
+
+            mockMvc.perform(get("/v1/teams/{id}/sub-teams", teamId))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$", hasSize(1)))
+                    .andExpect(jsonPath("$[0].id").isNotEmpty())
+                    .andExpect(jsonPath("$[0].name", equalTo("Looney Team")))
+                    .andExpect(jsonPath("$[0].notes", equalTo("Team for the Looney application.")));
+        }
+    }
+
+    @Nested
     @DisplayName("Create Sub-Team")
     class CreateSubTeam {
 
